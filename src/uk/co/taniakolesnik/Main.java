@@ -3,21 +3,37 @@ package uk.co.taniakolesnik;
 public class Main {
 
     public static void main(String[] args) {
-        Network network = new Network("Three");git
 
-        Phone phoneTania = new Phone();
-        phoneTania.setNumber(11111);
-        phoneTania.setOwner("Tania");
-        phoneTania.call(22222); // call FROM unregistered number
+        Dashboard dashboard = new Dashboard();
 
-        phoneTania.registerPhone(network); //register number one
+        Diamond diamondOne = new Diamond(new Point(3, 1),
+                new Point(5, 2),
+                new Point(1,4),
+                new Point(4,7));
 
-        Phone phoneKaty = new Phone(22222,"Katy");
-        phoneTania.call(22222); // call TO unregistered number
+        dashboard.addShape(diamondOne, 1);
+        dashboard.printShapesInfo();
 
-        phoneKaty.registerPhone(network); //register number two
-        phoneTania.call(22222);
+        Diamond diamondTwo = new Diamond(new Point(2.5, 2),
+                new Point(1.1, 2),
+                new Point(4,4),
+                new Point(7,0.2));
+        dashboard.addShape(diamondTwo, 2);
 
-        network.printPhoneNumbersRegistered();
+        Square square = new Square(new Point(8, 2.8),
+                new Point(4, 9),
+                new Point(6,3.3),
+                new Point(1,0.9));
+        dashboard.addShape(square, 3);
+
+        Triangle triangle = new Triangle(new Point(7, 1),
+                new Point(9, 5),
+                new Point(4,2));
+        dashboard.addShape(triangle, 0);
+
+        dashboard.printShapesInfo();
+        dashboard.removeShape(1);
+        dashboard.printShapesInfo();
+
     }
 }
