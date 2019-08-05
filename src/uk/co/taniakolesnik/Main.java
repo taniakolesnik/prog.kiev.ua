@@ -1,39 +1,46 @@
 package uk.co.taniakolesnik;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
+        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        int number = alphabet.length();
 
-        Dashboard dashboard = new Dashboard();
+        Group groupHistory = new Group("History evening course");
 
-        Diamond diamondOne = new Diamond(new Point(3, 1),
-                new Point(5, 2),
-                new Point(1,4),
-                new Point(4,7));
+        boolean gender = true;
+        for (int i = 0; i < 10; i++){
+            gender=!gender;
+            try {
+                groupHistory.addStudent(new Student(alphabet.charAt(random.nextInt(number)) + "_" + i,
+                        random.nextInt(60), gender, random.nextInt(100) + 1900, "Math"));
+            } catch (GroupFullException e) {
+                e.printStackTrace();
+            }
+        }
 
-        dashboard.addShape(diamondOne, 1);
-        dashboard.printShapesInfo();
+        System.out.println(groupHistory);
 
-        Diamond diamondTwo = new Diamond(new Point(2.5, 2),
-                new Point(1.1, 2),
-                new Point(4,4),
-                new Point(7,0.2));
-        dashboard.addShape(diamondTwo, 2);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nEnter student to add");
+        String nameToAdd = scanner.nextLine();
+        try {
+            groupHistory.addStudent(new Student(nameToAdd, "unknown"));
+        } catch (GroupFullException e) {
+            e.printStackTrace();
+        }
 
-        Square square = new Square(new Point(8, 2.8),
-                new Point(4, 9),
-                new Point(6,3.3),
-                new Point(1,0.9));
-        dashboard.addShape(square, 3);
 
-        Triangle triangle = new Triangle(new Point(7, 1),
-                new Point(9, 5),
-                new Point(4,2));
-        dashboard.addShape(triangle, 0);
+        System.out.println("\nEnter student to delete");
+        String nameToDelete = scanner.nextLine();
+        groupHistory.removeStudent(nameToDelete);
 
-        dashboard.printShapesInfo();
-        dashboard.removeShape(1);
-        dashboard.printShapesInfo();
+        System.out.println(groupHistory);
+
 
     }
 }
