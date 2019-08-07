@@ -12,9 +12,10 @@ public class Main {
 
         Group groupHistory = new Group("History evening course");
 
+        System.out.println("Fake data insert...");
         boolean gender = true;
-        for (int i = 0; i < 10; i++){
-            gender=!gender;
+        for (int i = 0; i < 9; i++) {
+            gender = !gender;
             try {
                 groupHistory.addStudent(new Student(alphabet.charAt(random.nextInt(number)) + "_" + i,
                         random.nextInt(60), gender, random.nextInt(100) + 1900, "Math"));
@@ -25,6 +26,22 @@ public class Main {
 
         System.out.println(groupHistory);
 
+        askToAddNewStudent(groupHistory);
+        askToAddNewStudent(groupHistory);
+
+        askToRemoveStudent(groupHistory);
+        askToAddNewStudent(groupHistory);
+    }
+
+    private static void askToRemoveStudent(Group groupHistory) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nEnter student to delete");
+        String nameToDelete = scanner.nextLine();
+        groupHistory.removeStudent(nameToDelete);
+        System.out.println(groupHistory);
+    }
+
+    private static void askToAddNewStudent(Group groupHistory) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEnter student to add");
         String nameToAdd = scanner.nextLine();
@@ -34,13 +51,6 @@ public class Main {
             e.printStackTrace();
         }
 
-
-        System.out.println("\nEnter student to delete");
-        String nameToDelete = scanner.nextLine();
-        groupHistory.removeStudent(nameToDelete);
-
         System.out.println(groupHistory);
-
-
     }
 }

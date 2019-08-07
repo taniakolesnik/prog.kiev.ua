@@ -1,6 +1,6 @@
 package uk.co.taniakolesnik;
 
-public class Student extends Human {
+public class Student extends Human implements Comparable {
 
     private int yearIn;
     private String facultyName;
@@ -34,8 +34,14 @@ public class Student extends Human {
 
     @Override
     public String toString() {
-        return "\n name: " + getName()
+        return " \n name: " + getName()
                 + "; age: " + getAge()
                 + "; started: " + getYearIn();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Student a = (Student) o;
+        return this.getName().compareTo(a.getName());
     }
 }

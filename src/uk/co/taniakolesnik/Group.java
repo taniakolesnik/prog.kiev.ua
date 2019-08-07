@@ -1,20 +1,18 @@
 package uk.co.taniakolesnik;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
-public class Group {
+public class Group{
 
     private static final int GROUP_MAX = 10;
 
     private String name;
-    private List<Student> students;
+
+    private Student[] students;
 
     public Group(String name) {
         this.name = name;
-        students = new ArrayList<>();
+        students = new Student[GROUP_MAX];
     }
 
     public String getName() {
@@ -25,51 +23,55 @@ public class Group {
         this.name = name;
     }
 
-    public List<Student> getStudents() {
+    public Student[] getStudents() {
         return students;
     }
 
 
     public void addStudent(Student student) throws GroupFullException {
-        if (students.size()>=GROUP_MAX){
-            throw new GroupFullException("Group is full. Max number is " + GROUP_MAX);
+        if (!isGroupFull()) {
+            loop:
+            for (int i = 0; i < students.length; i++) {
+                if (students[i] == null) {
+                    students[i] = student;
+                    System.out.println("Student " + student.getName() + " added ");
+                    break loop;
+                }
+            }
         } else {
-            students.add(student);
-            System.out.println("Student " + student.getName() + " has been added");
+            throw new GroupFullException("Group is full. Max number is " + GROUP_MAX);
+
         }
-        students.sort(new SortByNameComparator());
+    }
+
+    public boolean isGroupFull() {
+        int emptySlots = 0;
+        for (Student studentRecord : students) {
+            if (studentRecord == null) {
+                emptySlots++;
+            }
+        }
+        return emptySlots==0;
     }
 
     public void removeStudent(String name) {
-        List<Student> toRemove = new ArrayList<>();
-        for (Student studentRecord : students){
-            if (name.equals(studentRecord.getName())){
-                toRemove.add(studentRecord);
+        boolean notFound = true;
+        for (int i = 0; i < students.length; i++) {
+            if (name.equals(students[i].getName())) {
+                students[i] = null;
+                notFound = false;
+                System.out.println("Student " + name + " removed");
+                break;
             }
         }
-
-        if (toRemove.size()==0){
-            System.out.println("Student cannot be found");
-        } else {
-            students.removeAll(toRemove);
-            students.sort(new SortByNameComparator());
-        }
-
+        System.out.println("Student " + name + " search:" + notFound);
     }
 
     @Override
     public String toString() {
-        return "Group{" + name
+        return "Group " + name
                 + ", students: \n   "
-                + students
-                + '}';
+                + Arrays.asList(students);
     }
 
-    private class SortByNameComparator implements Comparator<Student> {
-
-        @Override
-        public int compare(Student o1, Student o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    }
 }
