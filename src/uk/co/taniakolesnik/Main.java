@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SortParameterNotFoundException {
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random random = new Random();
         int number = alphabet.length();
@@ -36,6 +36,9 @@ public class Main {
         askToSortStudents(groupHistory);
         askToSortStudents(groupHistory);
 
+
+        getStudentsReadyForMilitaryService(groupHistory);
+
     }
 
     private static void askToRemoveStudent(Group group) {
@@ -59,11 +62,22 @@ public class Main {
         System.out.println(group);
     }
 
-    private static void askToSortStudents(Group group) {
+    private static void askToSortStudents(Group group){
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEnter sort option: \n1 for name; \n2 for age; \n3 for year in; \n4 for facultyName;");
         int parameter = scanner.nextInt();
-        group.sortList(parameter);
-        System.out.println(group);
+        try {
+            group.sortList(parameter);
+        } catch (SortParameterNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println(group);
+        }
+
+    }
+
+    private static void getStudentsReadyForMilitaryService(Group group) {
+        System.out.println("\nStudents ready for military service: \n");
+        group.getListOfReadyForServiceStudents();
     }
 }

@@ -2,7 +2,7 @@ package uk.co.taniakolesnik;
 
 import java.util.Comparator;
 
-public class SortByParameterComparator implements Comparator<Student> {
+public class SortByParameterComparator implements Comparator<Student>  {
 
     int parameter; //1 name; 2 age; 3 year in; 4 facultyName;
 
@@ -11,7 +11,7 @@ public class SortByParameterComparator implements Comparator<Student> {
     }
 
     @Override
-    public int compare(Student o1, Student o2) {
+    public int compare(Student o1, Student o2)  {
         switch (parameter) {
             case 1:
                 return o1.getName().compareTo(o2.getName());

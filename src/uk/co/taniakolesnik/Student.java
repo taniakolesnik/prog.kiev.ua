@@ -36,6 +36,7 @@ public class Student extends Human {
     public String toString() {
         return " \n name: " + getName()
                 + "; age: " + getAge()
+                + "; sex: " + isSex()
                 + "; started: " + getYearIn();
     }
 
