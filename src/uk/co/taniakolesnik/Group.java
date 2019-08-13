@@ -1,6 +1,7 @@
 package uk.co.taniakolesnik;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Group{
 
@@ -74,4 +75,8 @@ public class Group{
                 + Arrays.asList(students);
     }
 
+    public void sortList(int parameter){
+        SortByParameterComparator comparator = new SortByParameterComparator(parameter);
+        Arrays.sort(students, comparator);
+    }
 }

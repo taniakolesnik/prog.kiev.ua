@@ -31,26 +31,39 @@ public class Main {
 
         askToRemoveStudent(groupHistory);
         askToAddNewStudent(groupHistory);
+
+        askToSortStudents(groupHistory);
+        askToSortStudents(groupHistory);
+        askToSortStudents(groupHistory);
+
     }
 
-    private static void askToRemoveStudent(Group groupHistory) {
+    private static void askToRemoveStudent(Group group) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEnter student to delete");
         String nameToDelete = scanner.nextLine();
-        groupHistory.removeStudent(nameToDelete);
-        System.out.println(groupHistory);
+        group.removeStudent(nameToDelete);
+        System.out.println(group);
     }
 
-    private static void askToAddNewStudent(Group groupHistory) {
+    private static void askToAddNewStudent(Group group) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEnter student to add");
         String nameToAdd = scanner.nextLine();
         try {
-            groupHistory.addStudent(new Student(nameToAdd, "unknown"));
+            group.addStudent(new Student(nameToAdd, "unknown"));
         } catch (GroupFullException e) {
             e.printStackTrace();
         }
 
-        System.out.println(groupHistory);
+        System.out.println(group);
+    }
+
+    private static void askToSortStudents(Group group) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nEnter sort option: \n1 for name; \n2 for age; \n3 for year in; \n4 for facultyName;");
+        int parameter = scanner.nextInt();
+        group.sortList(parameter);
+        System.out.println(group);
     }
 }
