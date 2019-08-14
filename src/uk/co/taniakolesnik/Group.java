@@ -3,7 +3,7 @@ package uk.co.taniakolesnik;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Group implements MilitaryService{
+public class Group implements MilitaryService {
 
     private static final int GROUP_MAX = 10;
 
@@ -29,18 +29,17 @@ public class Group implements MilitaryService{
 
 
     public void addStudent(Student student) throws GroupFullException {
+
         if (!isGroupFull()) {
-            loop:
             for (int i = 0; i < students.length; i++) {
                 if (students[i] == null) {
                     students[i] = student;
                     System.out.println("Student " + student.getName() + " added ");
-                    break loop;
+                    break;
                 }
             }
         } else {
             throw new GroupFullException("Group is full. Max number is " + GROUP_MAX);
-
         }
     }
 
@@ -51,7 +50,7 @@ public class Group implements MilitaryService{
                 emptySlots++;
             }
         }
-        return emptySlots==0;
+        return emptySlots == 0;
     }
 
     public void removeStudent(String name) {
@@ -74,9 +73,9 @@ public class Group implements MilitaryService{
                 + Arrays.asList(students);
     }
 
-    public void sortList(int parameter) throws SortParameterNotFoundException{
+    public void sortList(int parameter) throws SortParameterNotFoundException {
         SortByParameterComparator comparator = new SortByParameterComparator(parameter);
-        if (parameter < 1 || parameter > 4){
+        if (parameter < 1 || parameter > 4) {
             throw new SortParameterNotFoundException("Bad parameter");
         }
         Arrays.sort(students, comparator);
@@ -86,9 +85,9 @@ public class Group implements MilitaryService{
     public Student[] getListOfReadyForServiceStudents() {
         Student[] readyForMilitaryService = new Student[GROUP_MAX];
         int i = 0;
-        for (Student student: students) {
-            if (student!=null && student.getAge() >= 18 && !student.isSex() ){
-                System.out.println( "Student " + student);
+        for (Student student : students) {
+            if (student != null && student.getAge() >= 18 && !student.isSex()) {
+                System.out.println("Student " + student);
                 readyForMilitaryService[i] = student;
                 i++;
             }
