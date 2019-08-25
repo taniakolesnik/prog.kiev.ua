@@ -1,83 +1,54 @@
 package uk.co.taniakolesnik;
 
-import java.util.Random;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws SortParameterNotFoundException {
-        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random random = new Random();
-        int number = alphabet.length();
+    private static File folderIn;
+    private static File folderOut;
+    private static String extension;
 
-        Group groupHistory = new Group("History evening course");
-
-        System.out.println("Fake data insert...");
-        boolean gender = true;
-        for (int i = 0; i < 9; i++) {
-            gender = !gender;
-            try {
-                groupHistory.addStudent(new Student(alphabet.charAt(random.nextInt(number)) + "_" + i,
-                        random.nextInt(60), gender, random.nextInt(100) + 1900, "Math"));
-            } catch (GroupFullException e) {
-                e.printStackTrace();
-            }
+    public static void main(String[] args)  {
+        try {
+            askForParameters();
+        } catch (IncorrectParametersExeption incorrectParametersExeption) {
+            incorrectParametersExeption.printStackTrace();
         }
 
-        System.out.println(groupHistory);
-
-        askToAddNewStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToRemoveStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
-
-
-        getStudentsReadyForMilitaryService(groupHistory);
-
-    }
-
-    private static void askToRemoveStudent(Group group) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter student to delete");
-        String nameToDelete = scanner.nextLine();
-        group.removeStudent(nameToDelete);
-        System.out.println(group);
-    }
-
-    private static void askToAddNewStudent(Group group) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter student to add");
-        String nameToAdd = scanner.nextLine();
+        FolderCopy folderCopy = new FolderCopy(folderIn,folderOut,extension);
         try {
-            group.addStudent(new Student(nameToAdd, "unknown"));
-        } catch (GroupFullException e) {
+            folderCopy.copyFolder();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(group);
     }
 
-    private static void askToSortStudents(Group group){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter sort option: \n1 for name; \n2 for age; \n3 for year in; \n4 for facultyName;");
-        int parameter = scanner.nextInt();
-        try {
-            group.sortList(parameter);
-        } catch (SortParameterNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println(group);
+    private static void askForParameters() throws IncorrectParametersExeption {
+
+        Scanner folderInScanner = new Scanner(System.in);
+        System.out.println("\nFolder to copy from:");
+        String folderInPath = folderInScanner.nextLine();
+        folderIn = new File(folderInPath);
+        checkPaths(folderIn);
+
+
+        Scanner folderOutScanner = new Scanner(System.in);
+        System.out.println("\nFolder to copy to:");
+        String folderOutPath = folderOutScanner.nextLine();
+        folderOut = new File(folderOutPath);
+        checkPaths(folderOut);
+
+        Scanner extensionScanner = new Scanner(System.in);
+        System.out.println("\nFile extension to copy ( e.g. pdf)");
+        extension = extensionScanner.nextLine();
+    }
+
+    private static void checkPaths(File folder) throws IncorrectParametersExeption {
+        if (!folder.isDirectory()) {
+            throw new IncorrectParametersExeption("provided path is not a directory");
         }
-
     }
 
-    private static void getStudentsReadyForMilitaryService(Group group) {
-        System.out.println("\nStudents ready for military service: \n");
-        group.getListOfReadyForServiceStudents();
-    }
 }
