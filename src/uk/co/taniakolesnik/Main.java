@@ -2,53 +2,26 @@ package uk.co.taniakolesnik;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Main {
 
-    private static File folderIn;
-    private static File folderOut;
-    private static String extension;
+    private static String[] shorter;
+    private static String[] longer;
 
-    public static void main(String[] args)  {
-        try {
-            askForParameters();
-        } catch (IncorrectParametersExeption incorrectParametersExeption) {
-            incorrectParametersExeption.printStackTrace();
-        }
+    public static void main(String[] args) throws IOException {
 
-        FolderCopy folderCopy = new FolderCopy(folderIn,folderOut,extension);
-        try {
-            folderCopy.copyFolder();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File fileOne = new File("/Users/taniakolesnik/Downloads/test1/reservedWords.txt");
+        MyFileReader fileReaderOne = new MyFileReader(fileOne);
+        String[] stringsFileOne = fileReaderOne.getFileStrings();
+
+        File fileTwo = new File("/Users/taniakolesnik/Downloads/test2/reservedWords.txt");
+        MyFileReader fileReaderTwo = new MyFileReader(fileTwo);
+        String[] stringsFileTwo = fileReaderTwo.getFileStrings();
+
+        File file = new File("/Users/taniakolesnik/Downloads/test2/commonWords.txt");
+        CommonWordsWriter wordsWriter = new CommonWordsWriter(stringsFileOne, stringsFileTwo,file);
+        wordsWriter.writeCommon();
+
+
     }
-
-    private static void askForParameters() throws IncorrectParametersExeption {
-
-        Scanner folderInScanner = new Scanner(System.in);
-        System.out.println("\nFolder to copy from:");
-        String folderInPath = folderInScanner.nextLine();
-        folderIn = new File(folderInPath);
-        checkPaths(folderIn);
-
-
-        Scanner folderOutScanner = new Scanner(System.in);
-        System.out.println("\nFolder to copy to:");
-        String folderOutPath = folderOutScanner.nextLine();
-        folderOut = new File(folderOutPath);
-        checkPaths(folderOut);
-
-        Scanner extensionScanner = new Scanner(System.in);
-        System.out.println("\nFile extension to copy ( e.g. pdf)");
-        extension = extensionScanner.nextLine();
-    }
-
-    private static void checkPaths(File folder) throws IncorrectParametersExeption {
-        if (!folder.isDirectory()) {
-            throw new IncorrectParametersExeption("provided path is not a directory");
-        }
-    }
-
 }
