@@ -26,17 +26,12 @@ public class Main {
 //        getStudentsReadyForMilitaryService(groupHistory);
 
         File file = new File("/Users/taniakolesnik/IdeaProjects/prog.kiev.ua/src/Biology");
-
-        try {
-            loadGroupFromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IncorrectFileFormatException e) {
-            e.printStackTrace();
-        } catch (GroupFullException e) {
-            e.printStackTrace();
-        }
+        Group groupFromFile = new Group(file);
     }
+
+
+
+
 
     private static void loadFakeGroup() {
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -99,43 +94,4 @@ public class Main {
         group.getListOfReadyForServiceStudents();
     }
 
-    private static void loadGroupFromFile(File file) throws IOException, IncorrectFileFormatException, GroupFullException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String groupName = file.getName();
-        Group group = new Group(groupName);
-        String line = "";
-        for (;(line=bufferedReader.readLine())!=null;){
-            String[] studentInfoArray = line.split(" ");
-            if (studentInfoArray.length==5){
-                //String name, int age, boolean sex, int yearIn, String facultyName
-                String name = studentInfoArray[0];
-                int age = 0;
-                int yearIn = 0;
-                try {
-                    age = Integer.parseInt(studentInfoArray[1]);
-                    yearIn = Integer.parseInt(studentInfoArray[3]);
-                } catch (NumberFormatException e){
-                    throw new IncorrectFileFormatException("Please provide student info in correct format: \n" +
-                            "\"name(string) age(int) sex(boolean) yearIn(int) facultyName(string)\"");
-                }
-                boolean sex = studentInfoArray[2].equals("true");
-                String facultyName = studentInfoArray[4];
-                Student student = new Student(name, age, sex, yearIn, facultyName);
-                group.addStudent(student);
-            } else if (studentInfoArray.length==2){
-                String name = studentInfoArray[0];
-                String facultyName = studentInfoArray[1];
-                Student student = new Student(name, facultyName);
-                group.addStudent(student);
-            } else {
-                bufferedReader.close();
-                throw new IncorrectFileFormatException("Please provide student info in two ways: \n" +
-                        "\"Name(string) facultyName(string)\"" +
-                        "\nor " +
-                        "\n \"name(string) age(int) sex(boolean) yearIn(int) facultyName(string)\"");
-            }
-        }
-        bufferedReader.close();
-        System.out.println(group);
-    }
 }
