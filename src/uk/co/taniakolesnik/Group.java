@@ -3,7 +3,7 @@ package uk.co.taniakolesnik;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Group implements MilitaryService {
+public class Group implements MilitaryService{
 
     private static final int GROUP_MAX = 10;
 
@@ -94,4 +94,5 @@ public class Group implements MilitaryService {
         }
         return readyForMilitaryService;
     }
+
 }
