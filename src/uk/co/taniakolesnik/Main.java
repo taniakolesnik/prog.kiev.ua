@@ -27,9 +27,15 @@ public class Main {
 
         File file = new File("/Users/taniakolesnik/IdeaProjects/prog.kiev.ua/src/Biology");
         Group groupFromFile = new Group(file);
+
+        File fileTarget = new File("/Users/taniakolesnik/IdeaProjects/prog.kiev.ua/src/BiologyOutput.txt");
+        try {
+            groupFromFile.loadGroupToFile(fileTarget);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
-
-
 
 
 

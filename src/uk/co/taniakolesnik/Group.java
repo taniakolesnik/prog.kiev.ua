@@ -1,12 +1,9 @@
 package uk.co.taniakolesnik;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
-public class Group implements MilitaryService{
+public class Group implements MilitaryService {
 
     private static final int GROUP_MAX = 10;
 
@@ -22,7 +19,7 @@ public class Group implements MilitaryService{
         this.name = file.getName();
         students = new Student[GROUP_MAX];
         try {
-            loadGroupFromFile(file, this);
+            loadGroupFromFile(file);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IncorrectFileFormatException e) {
@@ -112,12 +109,49 @@ public class Group implements MilitaryService{
         return readyForMilitaryService;
     }
 
-    private void loadGroupFromFile(File file, Group group) throws IOException, IncorrectFileFormatException, GroupFullException {
+    public void loadGroupToFile(File targetFile) throws IOException {
+            if (!targetFile.exists()){
+                targetFile.createNewFile();
+            } else {
+                targetFile.delete();
+                targetFile.createNewFile();
+            }
+
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(targetFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Student[] students = this.getStudents();
+            System.out.println(this);
+            for (Student student : students) {
+                if (student==null){
+                    continue;
+                } else {
+                    printWriter.println(student.getName()
+                            + " "
+                            + student.getAge()
+                            + " "
+                            + student.isSex()
+                            + " "
+                            + student.getYearIn()
+                            + " "
+                            + student.getFacultyName()
+                    );
+                }
+
+            }
+            printWriter.close();
+
+    }
+
+    private void loadGroupFromFile(File file) throws IOException, IncorrectFileFormatException, GroupFullException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String line = "";
-        for (;(line=bufferedReader.readLine())!=null;){
+        for (; (line = bufferedReader.readLine()) != null; ) {
             String[] studentInfoArray = line.split(" ");
-            if (studentInfoArray.length==5){
+            if (studentInfoArray.length == 5) {
                 //String name, int age, boolean sex, int yearIn, String facultyName
                 String name = studentInfoArray[0];
                 int age = 0;
@@ -125,19 +159,19 @@ public class Group implements MilitaryService{
                 try {
                     age = Integer.parseInt(studentInfoArray[1]);
                     yearIn = Integer.parseInt(studentInfoArray[3]);
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     throw new IncorrectFileFormatException("Please provide student info in correct format: \n" +
                             "\"name(string) age(int) sex(boolean) yearIn(int) facultyName(string)\"");
                 }
                 boolean sex = studentInfoArray[2].equals("true");
                 String facultyName = studentInfoArray[4];
                 Student student = new Student(name, age, sex, yearIn, facultyName);
-                group.addStudent(student);
-            } else if (studentInfoArray.length==2){
+                this.addStudent(student);
+            } else if (studentInfoArray.length == 2) {
                 String name = studentInfoArray[0];
                 String facultyName = studentInfoArray[1];
                 Student student = new Student(name, facultyName);
-                group.addStudent(student);
+                this.addStudent(student);
             } else {
                 bufferedReader.close();
                 throw new IncorrectFileFormatException("Please provide student info in two ways: \n" +
@@ -147,6 +181,6 @@ public class Group implements MilitaryService{
             }
         }
         bufferedReader.close();
-        System.out.println(group);
+        System.out.println(this);
     }
 }
