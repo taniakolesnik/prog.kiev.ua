@@ -1,38 +1,35 @@
 package uk.co.taniakolesnik;
 
+import sun.security.krb5.SCDynamicStoreConfig;
+
 import java.io.File;
 import java.util.Scanner;
 
 public class Main {
 
-    private static File folderIn;
-    private static File folderOut;
+    private static File folder;
+    private static Thread thread;
 
-    public static void main(String[] args)  {
-        askForParameters();
+    public static void main(String[] args) {
+        folder = askForParameters();
 
-        FolderCopy folderCopy = new FolderCopy(folderIn,folderOut);
-        folderCopy.startCopy();
+        thread = new Thread(new FolderScanThread(folder));
+        thread.start();
+
     }
 
-    private static void askForParameters()  {
-
+    private static File askForParameters() {
         Scanner folderInScanner = new Scanner(System.in);
         System.out.println("\nFolder to copy from:");
         String folderInPath = folderInScanner.nextLine();
-        folderIn = new File(folderInPath);
+        folder = new File(folderInPath);
         try {
-            checkPaths(folderIn);
+            checkPaths(folder);
         } catch (IncorrectParametersExeption incorrectParametersExeption) {
             incorrectParametersExeption.printStackTrace();
+            folder = askForParameters();
         }
-
-
-        Scanner folderOutScanner = new Scanner(System.in);
-        System.out.println("\nFolder to copy to:");
-        String folderOutPath = folderOutScanner.nextLine();
-        folderOut = new File(folderOutPath);
-
+        return folder;
     }
 
     private static void checkPaths(File folder) throws IncorrectParametersExeption {
@@ -40,5 +37,4 @@ public class Main {
             throw new IncorrectParametersExeption("provided path is not a directory");
         }
     }
-
 }
