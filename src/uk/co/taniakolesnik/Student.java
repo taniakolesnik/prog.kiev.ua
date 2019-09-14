@@ -1,6 +1,8 @@
 package uk.co.taniakolesnik;
 
-public class Student extends Human {
+import java.io.Serializable;
+
+public class Student extends Human implements Serializable {
 
     private int yearIn;
     private String facultyName;

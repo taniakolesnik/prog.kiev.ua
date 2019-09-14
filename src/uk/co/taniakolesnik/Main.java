@@ -1,5 +1,9 @@
 package uk.co.taniakolesnik;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -24,21 +28,30 @@ public class Main {
             }
         }
 
-        System.out.println(groupHistory);
-
-        askToAddNewStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToRemoveStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
+        System.out.println("\n" +groupHistory);
 
 
-        getStudentsReadyForMilitaryService(groupHistory);
+        File file = new File("/Users/taniakolesnik/Downloads/" + getFileName() );
+        groupHistory.writeToFile(file);
 
+        Group groupFromFile = readFromFile(file);
+        System.out.println("\n" + groupFromFile);
+
+
+    }
+
+    public static Group readFromFile(File file){
+        Group group = null;
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))) {
+            group = (Group) objectInputStream.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return group;
+    }
+
+    private static String getFileName(){
+        return System.currentTimeMillis() + "-group" + ".txt";
     }
 
     private static void askToRemoveStudent(Group group) {

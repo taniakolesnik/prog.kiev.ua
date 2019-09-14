@@ -1,9 +1,10 @@
 package uk.co.taniakolesnik;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Group implements MilitaryService {
+public class Group implements MilitaryService , Serializable {
 
     private static final int GROUP_MAX = 10;
 
@@ -72,6 +73,16 @@ public class Group implements MilitaryService {
                 + ", students: \n   "
                 + Arrays.asList(students);
     }
+
+    public void writeToFile(File file){
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            objectOutputStream.writeObject(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Group was written to " + file.getPath());
+    }
+
 
     public void sortList(int parameter) throws SortParameterNotFoundException {
         SortByParameterComparator comparator = new SortByParameterComparator(parameter);
