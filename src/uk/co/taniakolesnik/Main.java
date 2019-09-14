@@ -1,54 +1,38 @@
 package uk.co.taniakolesnik;
 
-import java.util.ArrayList;
 
 public class Main {
-
-    private static int DOCK_NUMBERS = 2;
-    private static int SHIP_NUMBERS = 3;
-    private static int CARGO_ITEM = 10;
-
     public static void main(String[] args) {
 
-        long startTime = System.currentTimeMillis();
+        Container container = new Container();
+        BlackList blackList = new BlackList();
 
-        Ship [] ships = new Ship[SHIP_NUMBERS];
-        for (int i = 0; i < ships.length; i++) {
-            ships[i] = new Ship(CARGO_ITEM, i+1);
-        }
+        container.setBlackList(blackList);
 
-        Dock [] docks = new Dock[DOCK_NUMBERS];
-        for (int i = 0; i < docks.length; i++) {
-            docks[i] = new Dock(i+1);
-        }
+        printInfo(container, blackList);
 
-        uploadShips(ships, docks);
-        long endTime = System.currentTimeMillis();
-        long timeSpent = endTime - startTime;
-        System.out.println("Load finished. Time: " + timeSpent);
+        container.add(1);
+        container.add('a');
+        container.add("abc");
+
+        blackList.add(String.class);
+
+        printInfo(container, blackList);
+
+        container.add(2);
+        container.add('b');
+        container.add("you shall not pass");
+
+
+        printInfo(container, blackList);
+
+        container.remove(Integer.class);
+        container.remove(String.class);
+        container.remove(Character.class);
     }
 
-    private static void uploadShips(Ship[] ships, Dock[] docks) {
-        ArrayList<Thread> threads = new ArrayList<>();
-
-        for (Dock dock : docks) {
-            UnloadingProcess dockStatus = new UnloadingProcess(dock);
-            for (Ship ship : ships){
-                Thread thread = new Thread(new ShipUnloadingThread(dockStatus, ship));
-                threads.add(thread);
-            }
-        }
-
-        for (Thread thread : threads) {
-            thread.start();
-        }
-
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    private static void printInfo(Container container, BlackList blackList) {
+        container.printObjects();
+        blackList.printBlackList();
     }
 }
