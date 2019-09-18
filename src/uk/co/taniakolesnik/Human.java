@@ -48,10 +48,11 @@ public class Human {
 
     @Override
     public String toString() {
+        String printSex = isSex() ? "female" : "male";
         return "Human{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
-                ", sex=" + sex +
+                ", sex=" + printSex +
                 '}';
     }
 }

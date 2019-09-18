@@ -34,9 +34,10 @@ public class Student extends Human {
 
     @Override
     public String toString() {
+        String printSex = isSex() ? "female" : "male";
         return " \n name: " + getName()
                 + "; age: " + getAge()
-                + "; sex: " + isSex()
+                + "; sex: " + printSex
                 + "; started: " + getYearIn();
     }
 

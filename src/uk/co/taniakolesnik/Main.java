@@ -77,7 +77,7 @@ public class Main {
     }
 
     private static void getStudentsReadyForMilitaryService(Group group) {
-        System.out.println("\nStudents ready for military service: \n");
-        group.getListOfReadyForServiceStudents();
+        System.out.println("\nStudents ready for military service: \n " +
+                group.getListOfReadyForServiceStudents());
     }
 }

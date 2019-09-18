@@ -1,18 +1,22 @@
 package uk.co.taniakolesnik;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Group implements MilitaryService {
 
     private static final int GROUP_MAX = 10;
 
     private String name;
-    private Student[] students;
+    private List<Student> students;
 
     public Group(String name) {
         this.name = name;
-        students = new Student[GROUP_MAX];
+        students = new ArrayList<>();
     }
 
     public String getName() {
@@ -23,54 +27,32 @@ public class Group implements MilitaryService {
         this.name = name;
     }
 
-    public Student[] getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
 
     public void addStudent(Student student) throws GroupFullException {
-
         if (!isGroupFull()) {
-            for (int i = 0; i < students.length; i++) {
-                if (students[i] == null) {
-                    students[i] = student;
-                    System.out.println("Student " + student.getName() + " added ");
-                    break;
-                }
-            }
+           students.add(student);
         } else {
             throw new GroupFullException("Group is full. Max number is " + GROUP_MAX);
         }
     }
 
     public boolean isGroupFull() {
-        int emptySlots = 0;
-        for (Student studentRecord : students) {
-            if (studentRecord == null) {
-                emptySlots++;
-            }
-        }
-        return emptySlots == 0;
+        return students.size()>=GROUP_MAX;
     }
 
     public void removeStudent(String name) {
-        boolean notFound = true;
-        for (int i = 0; i < students.length; i++) {
-            if (name.equals(students[i].getName())) {
-                students[i] = null;
-                notFound = false;
-                System.out.println("Student " + name + " removed");
-                break;
-            }
-        }
-        System.out.println("Student " + name + " search:" + notFound);
+        students.removeIf(n -> n.getName().equals(name));
     }
 
     @Override
     public String toString() {
         return "Group " + name
                 + ", students: \n   "
-                + Arrays.asList(students);
+                + students;
     }
 
     public void sortList(int parameter) throws SortParameterNotFoundException {
@@ -78,20 +60,14 @@ public class Group implements MilitaryService {
         if (parameter < 1 || parameter > 4) {
             throw new SortParameterNotFoundException("Bad parameter");
         }
-        Arrays.sort(students, comparator);
+        students = students.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     @Override
-    public Student[] getListOfReadyForServiceStudents() {
-        Student[] readyForMilitaryService = new Student[GROUP_MAX];
-        int i = 0;
-        for (Student student : students) {
-            if (student != null && student.getAge() >= 18 && !student.isSex()) {
-                System.out.println("Student " + student);
-                readyForMilitaryService[i] = student;
-                i++;
-            }
-        }
+    public List<Student> getListOfReadyForServiceStudents() {
+        List<Student> readyForMilitaryService = students.stream()
+                .filter(s -> s != null && s.getAge() >= 18 && !s.isSex())
+                .collect(Collectors.toList());
         return readyForMilitaryService;
     }
 }
