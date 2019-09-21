@@ -1,83 +1,93 @@
 package uk.co.taniakolesnik;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
-    public static void main(String[] args) throws SortParameterNotFoundException {
-        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random random = new Random();
-        int number = alphabet.length();
+    private static Map<String, String> dictionary;
 
-        Group groupHistory = new Group("History evening course");
+    public static void main(String[] args) {
+        dictionary  = new HashMap<>();
+        dictionary.put("hello", "привіт");
 
-        System.out.println("Fake data insert...");
-        boolean gender = true;
-        for (int i = 0; i < 9; i++) {
-            gender = !gender;
-            try {
-                groupHistory.addStudent(new Student(alphabet.charAt(random.nextInt(number)) + "_" + i,
-                        random.nextInt(60), gender, random.nextInt(100) + 1900, "Math"));
-            } catch (GroupFullException e) {
-                e.printStackTrace();
-            }
+        translate("hello world");
+        askForWorldTranslation();
+        translate("hello world");
+        translate("world hello");
+
+        System.out.println(dictionary);
+        saveDictionary();
+
+        // remove one line from current dictionary and load saved one
+        dictionary.remove("world");
+
+        System.out.println("current dictionary in use: " + dictionary);
+        loadDictionary();
+        System.out.println("loaded old dictionary: " + dictionary);
+
+    }
+
+    private static void askForWorldTranslation() {
+
+        System.out.println("Enter new word in english (e.g. world): ");
+        Scanner scanner_key = new Scanner(System.in);
+        String key = scanner_key.next();
+        System.out.println("Enter translation for " + key + " (e.g. світ):");
+        Scanner scanner_value = new Scanner(System.in);
+        String value = scanner_value.next();
+        dictionary.put(key, value);
+    }
+
+    private static String translate(String sentence) {
+        List<String> words = Arrays.asList(sentence.split("\\W"));
+        String translation = words
+                .stream()
+                .map(Main::getTranslatedWord)
+                .collect(Collectors.joining(" "));
+
+        System.out.println(translation);
+        saveTranslation(translation,"Ukrainian.out");
+        return translation;
+    }
+
+    public static String getTranslatedWord(String word){
+        String translation = word;
+        if (dictionary.get(word)!=null){
+            translation = dictionary.get(word);
         }
-
-        System.out.println(groupHistory);
-
-        askToAddNewStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToRemoveStudent(groupHistory);
-        askToAddNewStudent(groupHistory);
-
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
-        askToSortStudents(groupHistory);
-
-
-        getStudentsReadyForMilitaryService(groupHistory);
-
+        return translation;
     }
 
-    private static void askToRemoveStudent(Group group) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter student to delete");
-        String nameToDelete = scanner.nextLine();
-        group.removeStudent(nameToDelete);
-        System.out.println(group);
-    }
+    public static void saveTranslation(String translation, String fileName){
 
-    private static void askToAddNewStudent(Group group) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter student to add");
-        String nameToAdd = scanner.nextLine();
-        try {
-            group.addStudent(new Student(nameToAdd, "unknown"));
-        } catch (GroupFullException e) {
+        File file = new File("C:\\Users\\TanyaK\\Downloads\\" + fileName);
+        try ( PrintWriter writer = new PrintWriter(file)){
+            writer.println(translation);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        System.out.println(group);
     }
 
-    private static void askToSortStudents(Group group){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nEnter sort option: \n1 for name; \n2 for age; \n3 for year in; \n4 for facultyName;");
-        int parameter = scanner.nextInt();
-        try {
-            group.sortList(parameter);
-        } catch (SortParameterNotFoundException e) {
+    public static void saveDictionary(){
+
+        File file = new File("C:\\Users\\TanyaK\\Downloads\\dictionary");
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))){
+            objectOutputStream.writeObject(dictionary);
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            System.out.println(group);
         }
-
     }
 
-    private static void getStudentsReadyForMilitaryService(Group group) {
-        System.out.println("\nStudents ready for military service: \n " +
-                group.getListOfReadyForServiceStudents());
+    public static void loadDictionary(){
+
+        File file = new File("C:\\Users\\TanyaK\\Downloads\\dictionary");
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))){
+            dictionary = (Map<String, String>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
 }
