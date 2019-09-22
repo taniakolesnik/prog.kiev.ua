@@ -15,7 +15,6 @@ public class Main {
             for (;;){
                 Socket socket = serverSocket.accept();
                 Client client = new Client(socket, id.incrementAndGet());
-
             }
 
         } catch (IOException e) {

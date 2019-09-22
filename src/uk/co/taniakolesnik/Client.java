@@ -23,7 +23,10 @@ public class Client implements Runnable {
     @Override
     public void run() {
         System.out.println("started for " + id);
-        String answer = "No info. Connection :" + id;
+        StringBuilder builder = new StringBuilder("System info: for request:" + id);
+        builder.append("<br> processors: " + Runtime.getRuntime().availableProcessors());
+        builder.append("<br>  free memory: " + Runtime.getRuntime().freeMemory());
+        builder.append("<br>  total memory: " + Runtime.getRuntime().totalMemory());
         try (OutputStream outputStream = socket.getOutputStream(); InputStream inputStream = socket.getInputStream()){
             PrintWriter printWriter = new PrintWriter(outputStream);
             byte[] request = new byte[inputStream.available()];
@@ -33,7 +36,7 @@ public class Client implements Runnable {
             printWriter.print("HTTP/1.0 200 OK\r\n");
             printWriter.print("Content-Type: text/html\r\n");
             printWriter.print("\r\n");
-            printWriter.print("<html><head><TITLE>Test</TITLE></head><body><P>" + answer + "</P></body></html>");
+            printWriter.print("<html><head><TITLE>Test</TITLE></head><body><P>" + builder.toString() + "</P></body></html>");
             printWriter.flush();
 
         } catch (IOException e){
